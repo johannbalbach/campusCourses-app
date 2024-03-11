@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import NavBar from './components/navbar';
 import RegisterForm from './components/registerForm';
 import LoginForm from './components/loginForm';
+import ProfileForm from './components/profileForm';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         <NavBar/>
       </div>
       <main>
-        <LoginForm />
+        <ProfileForm/>
       </main>
     </div>
   );

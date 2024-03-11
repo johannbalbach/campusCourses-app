@@ -67,12 +67,29 @@ async function getProfile() {
         })
     }
 
+async function editProfile(body = null) {
+    const token = localStorage.getItem('token');
+    return await instance.put('profile', body, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+        }).then(async response => {
+            if (response.status === 200) {
+                return response.data;
+            }
+        }).catch(error => {
+            console.error(error);
+        })
+    }
+
 
 const profileApi = {
     logout: logout,
     registration: registration,
     login: login,
-    getProfile: getProfile
+    getProfile: getProfile,
+    editProfile: editProfile
 };
 
 export default profileApi;
