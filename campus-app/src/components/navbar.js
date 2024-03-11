@@ -15,14 +15,15 @@ const NavBar = () => {
   
     // Функция для определения роли пользователя
     const checkUserRole = async () => {
-      // Реализуйте здесь логику определения роли пользователя, например, проверка его курсов или статуса преподавателя
-      // Для примера я просто установлю пользователю случайную роль
-      const randomRole = Math.floor(Math.random() * 3); // Генерируем случайное число от 0 до 2
-  
-      setUserRole(randomRole); // Устанавливаем роль пользователя
+        const profile = await profileApi.getProfile();
+        
+        if (profile == null){
+            setUserRole(null);
+        }
+
+        setUserRole();
     };
   
-    // Вызовем функцию для определения роли пользователя при монтировании компонента
     useEffect(() => {
         const fetchData = async () => {
           await checkUserRole();

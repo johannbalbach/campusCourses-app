@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Navbar } from 'react-bootstrap';
+import profileApi from '../api/profileApi';
 
 const RegisterForm = () => {
     const [fullName, setFullName] = useState({ value: '', isValid: true });
@@ -9,29 +10,34 @@ const RegisterForm = () => {
     const [confirmPassword, setConfirmPassword] = useState({ value: '', isValid: true });
     const [passwordsMatch, setPasswordsMatch] = useState(true);
   
-    const handlePasswordChange = (value) => {
-      setPassword({ value, isValid: true });
+    const handlePasswordChange = async (value) => {
+      setPassword({ value, isValid: /^(?=.*\d).{6,}$/.test(value) });
       setPasswordsMatch(value === confirmPassword.value);
     };
   
-    const handleConfirmPasswordChange = (value) => {
-      setConfirmPassword({ value, isValid: true });
+    const handleConfirmPasswordChange = async (value) => {
+      setConfirmPassword({ value, isValid: /^(?=.*\d).{6,}$/.test(value) });
       setPasswordsMatch(value === password.value);
     };
   
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
-  
-      // Проверка на соответствие паролей
+      
       if (password.value !== confirmPassword.value) {
         setConfirmPassword((prevState) => ({ ...prevState, isValid: false }));
         return;
       }
+
+      const body = {
+        fullName: fullName.value,
+        birthDate: dob.value,
+        email: email.value,
+        password: password.value,
+        confirmPassword: confirmPassword.value
+      }
+      
+      await profileApi.registration(body);
   
-      // Ваша логика для отправки формы после проверок
-      console.log('Form submitted:', { fullName, dob, email, password });
-  
-      // Сброс состояний
       setFullName({ value: '', isValid: true });
       setDob({ value: '', isValid: true });
       setEmail({ value: '', isValid: true });
@@ -45,7 +51,7 @@ const RegisterForm = () => {
         <Row className="col-md-11 col-lg-9 col-xl-8 col-xxl-7 p-3 mb-6">
           <Col xs={12}>
             <div className="mb-6 fs-2 h3"> Регистрация нового пользователя </div>
-            <Form id="registerForm" className="needs-validation" noValidate onSubmit={handleSubmit}>
+            <Form id="registerForm" className="needs-validation" onSubmit={handleSubmit}>
               <Form.Group className="mb-3" controlId="fullName">
                 <Form.Label>ФИО:</Form.Label>
                 <Form.Control
@@ -65,9 +71,8 @@ const RegisterForm = () => {
                   pattern="^(19\d\d|20\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
                   max="2023-12-10"
                   value={dob.value}
-                  onChange={(e) => setDob({ value: e.target.value, isValid: true })}
+                  onChange={(e) => setDob({ value: e.target.value, isValid: e.target.value.match(e.target.pattern)})}
                   required
-                  isInvalid={!dob.isValid}
                 />
                 <Form.Control.Feedback type="invalid">Пожалуйста, введите корректную дату рождения.</Form.Control.Feedback>
               </Form.Group>
@@ -76,14 +81,13 @@ const RegisterForm = () => {
                 <Form.Control
                   type="email"
                   placeholder="name@example.com"
-                  value={email.value}
-                  onChange={(e) => setEmail({ value: e.target.value, isValid: true })}
                   pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                  value={email.value}
+                  onChange={(e) => setEmail({ value: e.target.value, isValid: e.target.value.match(e.target.pattern) })}
                   required
                   isInvalid={!email.isValid}
                 />
                 <Form.Control.Feedback type="invalid">Пожалуйста, введите корректный email.</Form.Control.Feedback>
-                <Form.Text>Email будет использован для входа в систему</Form.Text>
               </Form.Group>
               <Form.Group className="mb-3" controlId="password">
                 <Form.Label>Пароль:</Form.Label>
@@ -91,11 +95,12 @@ const RegisterForm = () => {
                   type="password"
                   pattern="^(?=.*\d).{6,}$"
                   value={password.value}
-                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  onChange={async (e) => await handlePasswordChange(e.target.value)}
                   required
                   isInvalid={!password.isValid}
                 />
-                <Form.Control.Feedback type="invalid">Пожалуйста, введите пароль.</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Пароль должен содержать хотя бы одну цифру и шесть знаков</Form.Control.Feedback>
+                {!password.isValid && <div className='text-danger'>Введите корректный пароль.</div>}
               </Form.Group>
               <Form.Group className="mb-3" controlId="confirmPassword">
                 <Form.Label>Повторите пароль:</Form.Label>
@@ -103,7 +108,7 @@ const RegisterForm = () => {
                   type="password"
                   pattern="^(?=.*\d).{6,}$"
                   value={confirmPassword.value}
-                  onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+                  onChange={async (e) => await handleConfirmPasswordChange(e.target.value)}
                   required
                   isInvalid={!confirmPassword.isValid || !passwordsMatch}
                 />
@@ -111,7 +116,7 @@ const RegisterForm = () => {
                 {!passwordsMatch && <div className="text-danger">Пароли не совпадают.</div>}
               </Form.Group>
               <Button variant="primary" type="submit" id="registerBtn">
-                Зарегистрироваться
+              Зарегистрироваться
               </Button>
             </Form>
           </Col>
