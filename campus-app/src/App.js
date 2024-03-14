@@ -7,6 +7,7 @@ import ProfileForm from './components/profileForm';
 import {BrowserRouter as Router, Routes, Route, Link,} from 'react-router-dom';
 import MainContent from './components/main';
 import CourseItem from './components/courseItem';
+import GroupsList from './components/groupsList';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
             <Route path="/login" Component={LoginForm} />
             <Route path="/register" Component={RegisterForm} />
             <Route path="/profile" Component={ProfileForm} />
-            <Route path="/groups" Component={CourseItem}></Route>
+            <Route path="/groups" Component={GroupsList}></Route>
           </Routes>
         </main>
       </div>

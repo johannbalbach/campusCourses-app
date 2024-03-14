@@ -4,31 +4,38 @@ import profileApi from '../api/profileApi';
 import myCoursesApi from '../api/myCoursesApi';
 
 const NavBar = () => {
-    const [authenticated, setAuthenticated] = useState(false); // Состояние для отслеживания аутентификации пользователя
-    const [userRole, setUserRole] = useState(null); // Состояние для отслеживания роли пользователя (non-authorize, студент, преподаватель, комбо)
+    const [authenticated, setAuthenticated] = useState(false);
+    const [userRole, setUserRole] = useState('non'); // (non, user, student, teacher, combo)
     const [userName, setUserName] = useState(null);
 
     const handleLogout = async () => {
       await profileApi.logout();
 
       setAuthenticated(false);
-      setUserRole(null);
+      setUserRole('non');
     };
   
     const checkUserRole = async () => {
         const profile = await profileApi.getProfile();
         
         if (profile == null){
-            setUserRole(null);
+            setUserRole('non');
             return;
         }
-        setUserName(profile.FullName);
+        setUserName(profile.fullName);
 
         const subscribed = await myCoursesApi.subscribed();
         const teaching = await myCoursesApi.teaching();
-        if (profile == null){
-            setUserRole(null);
-            return;
+        console.log(subscribed, teaching);
+
+        if (subscribed.length > 0 && teaching.length > 0) {
+            setUserRole('combo');
+        } else if (subscribed > 0) {
+            setUserRole('student');
+        } else if (teaching > 0) {
+            setUserRole('teacher');
+        } else {
+            setUserRole('user');
         }
     };
   
@@ -43,6 +50,7 @@ const NavBar = () => {
         }
         
         fetchData();
+        console.log(userRole);
       }, []);
 
     return (
@@ -52,16 +60,21 @@ const NavBar = () => {
             <Navbar.Toggle aria-controls="navbarNav" />
             <Navbar.Collapse id="navbarNav">
             <Nav className="me-auto">
-                {authenticated && userRole !== null && (
+                {authenticated && userRole !== 'non' && (
                 <>
-                    {userRole === 0 && (
+                    {userRole != 'non' && (
                     <NavItem>
-                        <NavLink href="/communities" className='text-white'>Мои курсы</NavLink>
+                        <NavLink href="/groups" className='text-white'>Группы курсов</NavLink>
                     </NavItem>
                     )}
-                    {userRole === 1 && (
+                    {(userRole == 'student' || userRole == 'combo') && (
                     <NavItem>
-                        <NavLink href="/post/create"className='text-white'>Преподаваемые курсы</NavLink>
+                        <NavLink href="/" className='text-white'>Мои курсы</NavLink>
+                    </NavItem>
+                    )}
+                    {(userRole == 'teacher' || userRole == 'combo') && (
+                    <NavItem>
+                        <NavLink href="/"className='text-white'>Преподаваемые курсы</NavLink>
                     </NavItem>
                     )}
                 </>
