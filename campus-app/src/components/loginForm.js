@@ -5,6 +5,7 @@ import profileApi from '../api/profileApi';
 const LoginForm = () => {
     const [email, setEmail] = useState({ value: '', isValid: true });
     const [password, setPassword] = useState({ value: '', isValid: true });
+    const [loginError, setLoginError] = useState(false);
   
     const handleSubmit = async (e) => {
       e.preventDefault();
@@ -14,11 +15,24 @@ const LoginForm = () => {
         password: password.value,
       }
       
-      await profileApi.login(body);
+      await profileApi.login(body).catch(error => {
+        console.error(error);
+        setLoginError(true);
+      });
   
       setEmail({ value: '', isValid: true });
       setPassword({ value: '', isValid: true });
     };
+
+    useEffect(() => {
+      if (loginError) {
+          const timer = setTimeout(() => {
+              setLoginError(false);
+          }, 1200); // Сброс ошибки через 3 секунды
+          return () => clearTimeout(timer);
+          }
+      }, [loginError]);
+
   
     return (
       <Container className="d-flex justify-content-center" style={{ height: '75vh' }}>
@@ -52,8 +66,8 @@ const LoginForm = () => {
                 <Form.Control.Feedback type="invalid">Пароль должен содержать хотя бы одну цифру и шесть знаков</Form.Control.Feedback>
                 {!password.isValid && <div className='text-danger'>Введите корректный пароль.</div>}
               </Form.Group>
-              <Button variant="primary" type="submit" id="loginBtn">
-              Войти
+              <Button variant="primary" type="submit" id="loginBtn" style={{ backgroundColor: loginError ? 'red' : '' }}>
+                  {loginError ? 'Неправильный логин или пароль' : 'Войти'}
               </Button>
             </Form>
           </Col>

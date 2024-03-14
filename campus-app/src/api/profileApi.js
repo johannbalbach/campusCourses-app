@@ -17,7 +17,7 @@ async function logout() {
             if (response.status === 200) 
             {
                 localStorage.removeItem('token');
-                window.location.href = '/login';
+                window.location.href = '/';
             }
         }).catch(error => {
             console.error(error.response.data.error);
@@ -47,8 +47,6 @@ async function login(body = null) {
                 localStorage.setItem('token', response.data.token);
                 window.location.href = '/';
             }
-        }).catch(error => {
-            console.error(error);
         })
     }
 async function getProfile() {
@@ -68,6 +66,7 @@ async function getProfile() {
     }
 
 async function editProfile(body = null) {
+    console.log(body);
     const token = localStorage.getItem('token');
     return await instance.put('profile', body, {
         headers: {
