@@ -9,10 +9,10 @@ const NavBar = () => {
     const [userName, setUserName] = useState(null);
 
     const handleLogout = async () => {
-      await profileApi.logout();
+        await profileApi.logout();
 
-      setAuthenticated(false);
-      setUserRole('non');
+        setAuthenticated(false);
+        setUserRole('non');
     };
   
     const checkUserRole = async () => {
@@ -20,13 +20,14 @@ const NavBar = () => {
         
         if (profile == null){
             setUserRole('non');
+            setAuthenticated(false);
             return;
         }
+        setAuthenticated(true);
         setUserName(profile.fullName);
 
         const subscribed = await myCoursesApi.subscribed();
         const teaching = await myCoursesApi.teaching();
-        console.log(subscribed, teaching);
 
         if (subscribed.length > 0 && teaching.length > 0) {
             setUserRole('combo');
@@ -43,14 +44,8 @@ const NavBar = () => {
         const fetchData = async () => {
           await checkUserRole();
         };
-
-        const token = localStorage.getItem('token');
-        if (token != null){
-            setAuthenticated(true);
-        }
         
         fetchData();
-        console.log(userRole);
       }, []);
 
     return (

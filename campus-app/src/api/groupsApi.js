@@ -17,7 +17,14 @@ async function getGroups() {
             if (response.status === 200) {
                 return response.data;
             }
+            if (response.status === 401){
+                localStorage.removeItem('token');
+            }
         }).catch(error => {
+            if (error.response.status === 401){
+                localStorage.removeItem('token');
+                window.location.href = '/';
+            }
             console.error(error);
         })
     }

@@ -13,13 +13,18 @@ async function logout() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
         }
-        }).then(response => {
+        }).then(async response => {
+            console.log(response, response.status);
             if (response.status === 200) 
             {
                 localStorage.removeItem('token');
                 window.location.href = '/';
             }
         }).catch(error => {
+            if (error.response.status === 401){
+                localStorage.removeItem('token');
+                window.location.href = '/';
+            }
             console.error(error.response.data.error);
         })
     }
@@ -61,6 +66,9 @@ async function getProfile() {
                 return response.data;
             }
         }).catch(error => {
+            if (error.response.status === 401){
+                localStorage.removeItem('token');
+            }
             console.error(error);
         })
     }
@@ -78,6 +86,9 @@ async function editProfile(body = null) {
                 return response.data;
             }
         }).catch(error => {
+            if (error.response.status === 401){
+                localStorage.removeItem('token');
+            }
             console.error(error);
         })
     }
