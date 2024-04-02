@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, NavItem, NavLink, NavDropdown } from 'react-bootstrap';
-import profileApi from '../api/profileApi';
-import myCoursesApi from '../api/myCoursesApi';
+import profileApi from '../../api/profileApi';
+import myCoursesApi from '../../api/myCoursesApi';
 
 const NavBar = () => {
     const [authenticated, setAuthenticated] = useState(false);
