@@ -18,9 +18,6 @@ async function subscribed() {
             if (response.status === 200) {
                 return response.data;
             }
-            if (response.status === 401){
-                localStorage.removeItem('token');
-            }
         }).catch(error => {
             console.error(error);
         })
@@ -36,9 +33,6 @@ async function teaching() {
         }).then(async response => {
             if (response.status === 200) {
                 return response.data;
-            }
-            if (response.status === 401){
-                localStorage.removeItem('token');
             }
         }).catch(error => {
             console.error(error);

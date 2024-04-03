@@ -14,13 +14,13 @@ const ProfileForm = () => {
       setEmail({ value: data.email, isValid: true });
     })
     useEffect(() => {
-        const fetchData = async () => {
-          const data = await profileApi.getProfile();
+      const fetchData = async () => {
+        const data = await profileApi.getProfile();
 
-          setData(data);
-        };
-    
-        fetchData();
+        setData(data);
+      };
+  
+      fetchData();
       }, []);
 
     const handleSubmit = async (e) => {

@@ -54,7 +54,7 @@ const GroupsList = () => {
                 {groups.map((group) => (
                     <Row key={group.id} className='mt-2 border ms-auto'>
                         <Col className='container-md col-md-8 mt-auto mb-auto align-items-start justify-content-start'>
-                            <Link at={`/groups/${group.id}`}>{group.name}</Link>
+                            <Link to={`/groups/${group.id}`} state={{groupName: group.name}} className='text-dark'>{group.name}</Link>
                         </Col>
                         <div className=' container-md col-md-4 d-flex justify-content-end mt-2 mb-2'>
                             {userRole === 'admin' ? (

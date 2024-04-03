@@ -14,7 +14,6 @@ async function logout() {
             'Content-Type': 'application/json'
         }
         }).then(async response => {
-            console.log(response, response.status);
             if (response.status === 200) 
             {
                 localStorage.removeItem('token');
