@@ -49,7 +49,6 @@ const ProfileForm = () => {
                 type="text"
                 placeholder="Иванов Иван Иванович"
                 isValid={fullName.isValid}
-                pattern="^(?=.*\d).{6,}$"
                 feedbackText="Пожалуйста, введите корректный ФИО."
                 colSize={9}/>
               <FormField

@@ -16,6 +16,7 @@ const NavBar = () => {
     };
   
     const checkUserRole = async () => {
+        console.log("OK");
         const profile = await profileApi.getProfile();
         
         if (profile == null){
@@ -28,6 +29,9 @@ const NavBar = () => {
 
         const subscribed = await myCoursesApi.subscribed();
         const teaching = await myCoursesApi.teaching();
+        
+        console.log(subscribed);
+        console.log(teaching);
 
         if (subscribed.length > 0 && teaching.length > 0) {
             setUserRole('combo');
@@ -38,11 +42,14 @@ const NavBar = () => {
         } else {
             setUserRole('user');
         }
+        console.log(userRole);
     };
   
     useEffect(() => {
         const fetchData = async () => {
-          await checkUserRole();
+            if (localStorage.getItem('token') != null){
+                await checkUserRole();
+            }
         };
         
         fetchData();

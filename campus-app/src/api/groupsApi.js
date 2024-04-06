@@ -1,112 +1,42 @@
-import axios from 'axios';
-
-const baseURL = 'https://camp-courses.api.kreosoft.space/'
-
-const instance = axios.create({
-    baseURL : baseURL
-});
+import api from './api';
 
 async function getGroups() {
-    const token = localStorage.getItem('token');
-    return await instance.get('groups', {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    }).then(async response => {
-            if (response.status === 200) {
-                return response.data;
-        }
-            if (response.status === 401){
-                localStorage.removeItem('token');
-        }
-    }).catch(error => {
-            console.error(error);
-    })
+    const response = await api.get('groups');
+    return response.data;
 }
 
 async function createGroup(data) {
-    const token = localStorage.getItem('token');
-    return await instance.post('groups', data, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    }).then(async response => {
-            if (response.status === 200) {
-                window.location.href = '/groups';
-        }
-            if (response.status === 401){
-                localStorage.removeItem('token');
-        }
-    }).catch(error => {
-            console.error(error);
-    })
+    await api.post('groups', data);
+    window.location.href = '/groups';
 }
 
-async function EditGroup(groupId, data) {
-    const token = localStorage.getItem('token');
-    return await instance.pust(`groups/${groupId}`, data, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    }).then(async response => {
-        if (response.status === 200) {
-            window.location.href = '/groups';
-        }
-        if (response.status === 401) {
-            localStorage.removeItem('token');
-        }
-    }).catch(error => {
-        console.error(error);
-    });
+async function editGroup(groupId, data) {
+    await api.put(`groups/${groupId}`, data);
+    window.location.href = '/groups';
 }
 
-async function DeleteGroup(groupId) {
-    const token = localStorage.getItem('token');
-    return await instance.delete(`groups/${groupId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    }).then(async response => {
-        if (response.status === 200) {
-            window.location.href = '/groups';
-        }
-        if (response.status === 401) {
-            localStorage.removeItem('token');
-        }
-    }).catch(error => {
-        console.error(error);
-    });
+async function deleteGroup(groupId) {
+    await api.delete(`groups/${groupId}`);
+    window.location.href = '/groups';
 }
 
-async function GetGroupCourses(groupId) {
-    const token = localStorage.getItem('token');
-    return await instance.get(`groups/${groupId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    }).then(async response => {
-        if (response.status === 200) {
-            return response.data;
-        }
-        if (response.status === 401) {
-            localStorage.removeItem('token');
-        }
-    }).catch(error => {
-        console.error(error);
-    });
+async function getGroupCourses(groupId) {
+    const response = await api.get(`groups/${groupId}`);
+    return response.data;
+}
+
+async function createCourse(groupId, data){
+    await api.post(`groups/${groupId}`, data);
+    window.location.href = '/groups';
 }
 
 const groupsApi = {
     getGroups: getGroups,
     createGroup: createGroup,
-    EditGroup: EditGroup,
-    DeleteGroup: DeleteGroup,
-    GetGroupCourses: GetGroupCourses
+    editGroup: editGroup,
+    deleteGroup: deleteGroup,
+    getGroupCourses: getGroupCourses,
+    createCourse: createCourse
 };
 
 export default groupsApi;

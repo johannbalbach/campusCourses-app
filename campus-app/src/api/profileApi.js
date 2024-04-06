@@ -1,97 +1,32 @@
-import axios from 'axios';
-
-const baseURL = 'https://camp-courses.api.kreosoft.space/';
-
-const instance = axios.create({
-    baseURL:baseURL
-});
+import api from './api';
 
 async function logout() {
-    const token = localStorage.getItem('token');
-    await instance.post('logout', {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-        }).then(async response => {
-            if (response.status === 200) 
-            {
-                localStorage.removeItem('token');
-                window.location.href = '/';
-            }
-        }).catch(error => {
-            if (error.response.status === 401){
-                localStorage.removeItem('token');
-                window.location.href = '/';
-            }
-            console.error(error.response.data.error);
-        })
-    }
+    await api.post('logout');
+    localStorage.removeItem('token');
+    window.location.href = '/';
+}
+
 async function registration(body = null) {
-    await instance.post('registration', body, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-        }).then(async response => {
-            if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
-                window.location.href = '/';
-            }
-        }).catch(error => {
-            console.error(error);
-        })
-    }
+    const response = await api.post('registration', body);
+    localStorage.setItem('token', response.data.token);
+    window.location.href = '/';
+}
+
 async function login(body = null) {
-    await instance.post('login', body, {
-        headers: {
-            'Content-Type': 'application/json'
-        }
-        }).then(async response => {
-            if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
-                window.location.href = '/';
-            }
-        })
-    }
+    const response = await api.post('login', body);
+    localStorage.setItem('token', response.data.token);
+    window.location.href = '/';
+}
+
 async function getProfile() {
-    const token = localStorage.getItem('token');
-    return await instance.get('profile', {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-        }).then(async response => {
-            if (response.status === 200) {
-                return response.data;
-            }
-        }).catch(error => {
-            if (error.response.status === 401){
-                localStorage.removeItem('token');
-            }
-            console.error(error);
-        })
-    }
+    const response = await api.get('profile');
+    return response.data;
+}
 
 async function editProfile(body = null) {
-    console.log(body);
-    const token = localStorage.getItem('token');
-    return await instance.put('profile', body, {
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-        }).then(async response => {
-            if (response.status === 200) {
-                return response.data;
-            }
-        }).catch(error => {
-            if (error.response.status === 401){
-                localStorage.removeItem('token');
-            }
-            console.error(error);
-        })
-    }
-
+    const response = await api.put('profile', body);
+    return response.data;
+}
 
 const profileApi = {
     logout: logout,
