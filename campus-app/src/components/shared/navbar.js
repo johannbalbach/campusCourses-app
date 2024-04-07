@@ -16,7 +16,6 @@ const NavBar = () => {
     };
   
     const checkUserRole = async () => {
-        console.log("OK");
         const profile = await profileApi.getProfile();
         
         if (profile == null){
@@ -29,9 +28,6 @@ const NavBar = () => {
 
         const subscribed = await myCoursesApi.subscribed();
         const teaching = await myCoursesApi.teaching();
-        
-        console.log(subscribed);
-        console.log(teaching);
 
         if (subscribed.length > 0 && teaching.length > 0) {
             setUserRole('combo');
@@ -42,7 +38,6 @@ const NavBar = () => {
         } else {
             setUserRole('user');
         }
-        console.log(userRole);
     };
   
     useEffect(() => {
@@ -71,12 +66,12 @@ const NavBar = () => {
                     )}
                     {(userRole == 'student' || userRole == 'combo') && (
                     <NavItem>
-                        <NavLink href="/" className='text-white'>Мои курсы</NavLink>
+                        <NavLink href="/courses/my" className='text-white'>Мои курсы</NavLink>
                     </NavItem>
                     )}
                     {(userRole == 'teacher' || userRole == 'combo') && (
                     <NavItem>
-                        <NavLink href="/"className='text-white'>Преподаваемые курсы</NavLink>
+                        <NavLink href="/courses/teaching"className='text-white'>Преподаваемые курсы</NavLink>
                     </NavItem>
                     )}
                 </>

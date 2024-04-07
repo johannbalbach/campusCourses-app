@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Button, Table, Modal, Row, Col } from 'react-bootstrap';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import groupsApi from '../../api/groupsApi';
+import GroupModal from './groupModal';
 
 const GroupsList = () => {
     const [groups, setGroups] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [groupName, setGroupName] = useState('');
-    const [selectedGroup, setSelectedGroup] = useState(null);
-    const [userRole, setUserRole] = useState('user');
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalData, setModalData] = useState({});
+    const [userRole, setUserRole] = useState('admin');
+    const [onSave, setOnSave] = useState(null);
 
     useEffect(() => {
         const fetchGroups = async () => {
@@ -18,78 +20,57 @@ const GroupsList = () => {
         fetchGroups();
     }, []);
 
-    const handleEditGroup = (group) => {
-        setSelectedGroup(group);
-        setGroupName(group.name);
+    const changeModal = useCallback((title, data, onSave) => {
+        setModalTitle(title);
+        setModalData(data);
         setShowModal(true);
+        setOnSave(() => onSave);
+    }, []);
+
+    const handleDeleteGroup = async (groupId) => {
+        await groupsApi.deleteGroup(groupId);
     };
 
-    const handleDeleteGroup = (groupId) => {
-        groupsApi.deleteGroup(groupId)
-            .then(() => {
-                const updatedGroups = groups.filter(group => group.id !== groupId);
-                setGroups(updatedGroups);
-            })
-            .catch(error => console.error(error));
+    const handleEditGroup = async (groupId, body) => {
+        await groupsApi.editGroup(groupId, body);
+        setShowModal(false);
     };
 
-    const handleSaveGroup = () => {
-        const updatedGroups = groups.map(group => {
-            if (group.id === selectedGroup.id) {
-                return { ...group, name: groupName };
-            }
-            return group;
-        });
-        setGroups(updatedGroups);
+    const handleCreateGroup = async (groupId, body) => {
+        await groupsApi.createGroup(groupId, body);
         setShowModal(false);
     };
 
     return (
-        <Container className='col-md-11 col-lg-9 col-xl-8 col-xxl-7'>
+        <Container className='container-md col-md-9 align-items-start justify-content-start'>
             <h1>Группы курсов</h1>
             {userRole === 'admin' && (
-                <Button onClick={() => setShowModal(true)} className='ms-auto mt-4 mb-2'>Создать группу</Button>
+                <Button onClick={() => changeModal("Создать группу", {}, handleCreateGroup)} className='ms-auto mt-4 mb-2'>Создать группу</Button>
             )}
             <div className='mt-4'>
                 {groups.map((group) => (
                     <Row key={group.id} className='mt-2 border ms-auto'>
-                        <Col className='container-md col-md-8 mt-auto mb-auto align-items-start justify-content-start'>
+                        <Col className='col-sm-8 mt-auto mb-auto align-items-start justify-content-start'>
                             <Link to={`/groups/${group.id}`} state={{groupName: group.name}} className='text-dark'>{group.name}</Link>
                         </Col>
-                        <div className=' container-md col-md-4 d-flex justify-content-end mt-2 mb-2'>
-                            {userRole === 'admin' ? (
+                        <div className='col-sm-4 d-flex justify-content-end mt-2 mb-2'>
+                            {userRole === 'admin' && (
                                 <div>
-                                    <Button className = '' variant="warning" onClick={() => handleEditGroup(group)}>Редактировать</Button>{' '}
-                                    <Button className = 'ms-3 me-3 ' variant="danger" onClick={() => handleDeleteGroup(group.id)}>Удалить</Button>
-                                </div>
-                            ) : (
-                                <div className='mt-3 mb-3'>
-
+                                    <Button onClick={() => changeModal("Редактировать группу", group, handleEditGroup)} className='ms-3 mt-auto mb-auto' variant="warning">Редактировать</Button>{' '}
+                                    <Button onClick={() => handleDeleteGroup(group.id)} className='ms-3 mt-auto mb-auto' variant="danger">Удалить</Button>
                                 </div>
                             )}
                         </div>
                     </Row>
                 ))}
             </div>
-            <Modal show={showModal} onHide={() => setShowModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Редактировать группу</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <h6>Название группы</h6>
-                    <input
-                        type="text"
-                        value={groupName}
-                        onChange={(e) => setGroupName(e.target.value)}
-                        className="form-control mb-3"
-                        placeholder="Введите название группы"
-                    />
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Отмена</Button>
-                    <Button variant="primary" onClick={handleSaveGroup}>Сохранить</Button>
-                </Modal.Footer>
-            </Modal>
+            <GroupModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                title={modalTitle}
+                onSave={onSave}
+                data={modalData}
+            />
         </Container>
     );
 };

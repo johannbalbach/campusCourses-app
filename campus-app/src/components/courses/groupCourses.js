@@ -3,8 +3,9 @@ import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import groupsApi from '../../api/groupsApi';
 import { GroupContext } from '../groups/groupContext';
+import CoursesList from './coursesList';
 
-const groupCourses = () => {
+const GroupCourses = () => {
     const location = useLocation();
     const { id } = useParams();
     const [showModal, setShowModal] = useState(false);
@@ -34,11 +35,9 @@ const groupCourses = () => {
     return (
         <>
         <Col className='container-md col-md-9 align-items-start justify-content-start'>
-            <h2 className="ms-3">Группа - {groupName}</h2>
-            <Button className="mt-3 ms-3" onClick={() => setShowModal(true)}>Создать новый курс</Button>
-            <Row className="mt-2 ms-auto">
-                {courses.map(renderCourseCard)}
-            </Row>
+            <h2 className="ms-auto">Группа - {groupName}</h2>
+            <Button className="mt-3 ms-auto mb-3" onClick={() => setShowModal(true)}>Создать новый курс</Button>
+            <CoursesList type="group" id={id}/>
         </Col>
 
         <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -108,4 +107,4 @@ const groupCourses = () => {
     );
 }
 
-export default groupCourses;
+export default GroupCourses;
