@@ -48,8 +48,9 @@ const CourseInfo = () => {
 
                     <CourseDetails course={course} />
                     <CourseCard body ={course} />
+                    <CourseMembers members ={course}/>
                 </div>
-               
+
                 {/* Edit Course Modal (implementation omitted for brevity) */}
                 <Modal show={showEditModal} onHide={handleEditModalClose}>
                 {/* Modal content for editing course details */}

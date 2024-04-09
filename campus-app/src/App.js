@@ -11,7 +11,7 @@ import GroupCourses from './components/courses/groupCourses';
 import MyCourses from './components/courses/myCourses';
 import TeachingCourses from './components/courses/teachingCourses';
 import { GroupProvider } from './components/groups/groupContext';
-import CourseInfo from './components/courses/courseInfo';
+import CourseInfo from './components/coursedetails/courseInfo';
 
 function App() {
   return (

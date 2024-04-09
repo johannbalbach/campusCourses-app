@@ -35,7 +35,7 @@ const CoursesList = ({ type, id = 0 }) => {
             <Row key={id} className='mt-2'>
                 <Col key={id} className='align-items-start justify-content-start'>
                     <Card style={{borderRadius: '0'}}>
-                        <Link to={`/courses/${id}`} className='text-dark'>
+                        <Link to={`/courses/${id}`} className='text-dark' style={{textDecoration: 'none'}}>
                             <Card.Body>
                                 <Card.Text style={{ fontSize: '1rem' }}>
                                     <Row className=''>
@@ -46,13 +46,13 @@ const CoursesList = ({ type, id = 0 }) => {
                                             <span style={{ color: statusColor[status] }}>{status}</span>
                                         </div>
                                     </Row>
-                                    <span>Учебный год - </span>{startYear}-{startYear + 1}
+                                    <span>Учебный год – </span>{startYear}-{startYear + 1}
                                     <br />
-                                    <span>Семестр - </span>{semester}
+                                    <span>Семестр – </span>{semester}
                                     <br />
-                                    <span style={{ color: 'grey' }}>Мест всего - </span>{maximumStudentsCount}
+                                    <span style={{ color: 'grey' }}>Мест всего – </span>{maximumStudentsCount}
                                     <br />
-                                    <span style={{ color: 'grey' }}>Мест свободно - </span>{remainingSlotsCount}
+                                    <span style={{ color: 'grey' }}>Мест свободно – </span>{remainingSlotsCount}
                                 </Card.Text>
                             </Card.Body>
                         </Link>

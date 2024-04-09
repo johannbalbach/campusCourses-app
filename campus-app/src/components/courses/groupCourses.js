@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
 import { Link, useParams, useLocation } from 'react-router-dom';
-import groupsApi from '../../api/groupsApi';
-import { GroupContext } from '../groups/groupContext';
 import CoursesList from './coursesList';
 
 const GroupCourses = () => {

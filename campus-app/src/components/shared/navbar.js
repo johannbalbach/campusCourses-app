@@ -31,9 +31,9 @@ const NavBar = () => {
 
         if (subscribed.length > 0 && teaching.length > 0) {
             setUserRole('combo');
-        } else if (subscribed > 0) {
+        } else if (subscribed.length > 0) {
             setUserRole('student');
-        } else if (teaching > 0) {
+        } else if (teaching.length > 0) {
             setUserRole('teacher');
         } else {
             setUserRole('user');
@@ -48,7 +48,7 @@ const NavBar = () => {
         };
         
         fetchData();
-      }, []);
+      }, [, userRole]);
 
     return (
         <Navbar bg="secondary" expand="lg" className="align-top p-3 mb-3 mt-0">
