@@ -11,7 +11,13 @@ const CourseInfo = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [userRole, setUserRole] = useState('admin');
     const { id } = useParams();
-  
+
+    const [showEditCourseModal, setShowEditCourseModal] = useState(false);
+    const [showEditStatusModal, setShowEditStatusModal] = useState(false);
+    const [showCreateNotificationModal, setShowCreateNotificationModal] = useState(false);
+    const [showAddTeacherModal, setShowAddTeacherModal] = useState(false);
+    const [showEditMarkModal, setShowEditMarkModal] = useState(false);
+
     useEffect(() => {
         const fetchData = async () => {
             const data = await coursesApi.getCourseDetails(id);
@@ -52,9 +58,9 @@ const CourseInfo = () => {
                 </div>
 
                 {/* Edit Course Modal (implementation omitted for brevity) */}
-                <Modal show={showEditModal} onHide={handleEditModalClose}>
-                {/* Modal content for editing course details */}
-                </Modal>
+                <EditCourseModal show={showEditCourseModal} onClose={handleCloseEditCourseModal} />
+                <AcceptStudentModal show={showAcceptStudentModal} onClose={handleCloseAcceptStudentModal} />
+                <RejectStudentModal show={showRejectStudentModal} onClose={handleCloseRejectStudentModal} />
                 </>
             ):(
                 <a>Загрузка информации....</a>

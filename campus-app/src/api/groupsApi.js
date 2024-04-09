@@ -28,7 +28,12 @@ async function getGroupCourses(groupId) {
 
 async function createCourse(groupId, data){
     await api.post(`groups/${groupId}`, data);
-    window.location.href = '/groups';
+    window.location.href = `/groups/${groupId}`;
+}
+
+async function userList(){
+    const response = await api.get(`users`);
+    return response.data;
 }
 
 const groupsApi = {
@@ -37,7 +42,8 @@ const groupsApi = {
     editGroup: editGroup,
     deleteGroup: deleteGroup,
     getGroupCourses: getGroupCourses,
-    createCourse: createCourse
+    createCourse: createCourse,
+    userList: userList
 };
 
 export default groupsApi;

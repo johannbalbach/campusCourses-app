@@ -58,7 +58,7 @@ const GroupsList = () => {
                         <div className='col-sm-4 d-flex justify-content-end mt-2 mb-2'>
                             {userRole === 'admin' && (
                                 <div>
-                                    <Button onClick={() => changeModal("Редактировать группу", group, handleEditGroup)} className='ms-3 mt-auto mb-auto' variant="warning">Редактировать</Button>{' '}
+                                    <Button onClick={() => changeModal("Редактировать группу", group, handleEditGroup)} className='ms-3 mt-auto mb-auto' variant="warning">Редактировать</Button>
                                     <Button onClick={() => handleDeleteGroup(group.id)} className='ms-3 mt-auto mb-auto' variant="danger">Удалить</Button>
                                 </div>
                             )}
