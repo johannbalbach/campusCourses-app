@@ -16,6 +16,13 @@ api.interceptors.request.use(
         return config;
     },
     (error) => {
+        if (error.response.status === 401) {
+            localStorage.removeItem('token');
+            console.error(error);
+            
+            window.location.href = '/';
+            return null;
+        }
         return Promise.reject(error);
     }
 );
@@ -26,10 +33,11 @@ api.interceptors.response.use(
     },
     (error) => {
         if (error.response.status === 401) {
-            console.log("OK")
             localStorage.removeItem('token');
             console.error(error);
-            return;
+
+            window.location.href = '/';
+            return null;
         }
         return Promise.reject(error);
     }

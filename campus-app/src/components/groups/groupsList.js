@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Button, Table, Modal, Row, Col } from 'react-bootstrap';
+import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 import groupsApi from '../../api/groupsApi';
 import GroupModal from './groupModal';
+import store from '../../store/store';
 
-const GroupsList = () => {
+const GroupsList = ({isAdmin}) => {
     const [groups, setGroups] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [modalTitle, setModalTitle] = useState('');
     const [modalData, setModalData] = useState({});
-    const [userRole, setUserRole] = useState('admin');
     const [onSave, setOnSave] = useState(null);
 
     useEffect(() => {
@@ -44,19 +45,19 @@ const GroupsList = () => {
     return (
         <Container className='container-md col-md-9 align-items-start justify-content-start'>
             <h1>Группы курсов</h1>
-            {userRole === 'admin' && (
+            {isAdmin && (
                 <Button onClick={() => changeModal("Создать группу", {}, handleCreateGroup)} className='ms-auto mt-4 mb-2'>Создать группу</Button>
             )}
             <div className='mt-4'>
                 {groups.map((group) => (
                     <Row key={group.id} className='mt-2 border ms-auto'>
-                        <Col className='col-sm-8 mt-auto mb-auto align-items-start justify-content-start'>
+                        <Col className='col-sm-8 mt-2 mb-2 align-items-start justify-content-start'>
                             <Link to={`/groups/${group.id}`} state={{groupName: group.name}} className='text-dark ms-2' style={{textDecoration: 'none', fontSize: '1.1rem'}}>
                                 {group.name}
                             </Link>
                         </Col>
                         <div className='col-sm-4 d-flex justify-content-end mt-2 mb-2'>
-                            {userRole === 'admin' && (
+                            {isAdmin && (
                                 <div>
                                     <Button onClick={() => changeModal("Редактировать группу", group, handleEditGroup)} className='ms-3 mt-auto mb-auto' variant="warning">Редактировать</Button>
                                     <Button onClick={() => handleDeleteGroup(group.id)} className='ms-3 mt-auto mb-auto' variant="danger">Удалить</Button>
@@ -77,4 +78,8 @@ const GroupsList = () => {
     );
 };
 
-export default GroupsList;
+const mapStateToProps = state => ({
+    isAdmin: state.isAdmin
+});
+
+export default connect(mapStateToProps)(GroupsList);

@@ -5,10 +5,12 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import coursesApi from '../../../api/coursesApi';
 
-const EditCourseModal = ({data}) => {
+const EditCourseModal = ({data, showModal, handleCloseModal}) => {
     const { id } = useParams();
-    const [showModal, setShowModal] = useState(false);
-    const [requirements, annotations] = data;
+    const [formData, setFormData] = useState({
+        requirements: data.requirements,
+        annotations: data.annotations
+    });
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
@@ -21,32 +23,32 @@ const EditCourseModal = ({data}) => {
 
     const handleSaveCourse = async (e) => {
         e.preventDefault();
-        if (annotations == '' || requirements == ''){
+        if (formData.annotations == '' || formData.requirements == ''){
             return;
         }
 
-        await coursesApi.editCourse(id, {requirements: requirements, annotations: annotations});
-        setShowModal(false);
+        await coursesApi.editCourseRequirementsAndAnnotations(id, formData);
+        handleCloseModal(false);
     };
 
     return (
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal show={showModal} onHide={() => handleCloseModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Редактирование курса</Modal.Title>
             </Modal.Header>
             <Form onSubmit={handleSaveCourse}>
                 <Modal.Body>
-                    <Form.Group controlId="formRequirements" className='mt-2'>
+                <Form.Group controlId="formRequirements" className='mt-2'>
                         <Form.Label>Требования</Form.Label>
-                        <ReactQuill name="requirements" value={requirements}  onChange={(e) => {setFormData({ ...formData, 'requirements': e })}} modules={{ toolbar: toolbarOptions }}/>
+                        <ReactQuill name="requirements" value={formData.requirements}  onChange={(e) => {setFormData({ ...formData, 'requirements': e })}} modules={{ toolbar: toolbarOptions }}/>
                     </Form.Group>
                     <Form.Group controlId="formAnnotations" className='mt-2'>
                         <Form.Label>Аннотации</Form.Label>
-                        <ReactQuill name="annotations" value={annotations}  onChange={(e) => {setFormData({ ...formData, 'annotations': e })}} modules={{ toolbar: toolbarOptions }}/>
+                        <ReactQuill name="annotations" value={formData.annotations}  onChange={(e) => {setFormData({ ...formData, 'annotations': e })}} modules={{ toolbar: toolbarOptions }}/>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Отмена</Button>
+                    <Button variant="secondary" onClick={() => handleCloseModal(false)}>Отмена</Button>
                     <Button variant="primary" type="submit">Создать</Button>
                 </Modal.Footer>
             </Form>

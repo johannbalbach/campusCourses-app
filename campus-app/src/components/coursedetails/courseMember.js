@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Card, ListGroup, Nav, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './courseCard.css';
 import PendingButtons from './PeddingButtons';
-import EditModal from './EditModal';
+import EditMarkModal from './Modals/EditMarkModal';
+import myCoursesApi from '../../api/myCoursesApi';
 
-const CourseMember = ({ body, memberType, userRole }) => {
+const CourseMember = ({ body, memberType, isPrivileged }) => {
     const { email, isMain, name, finalResult, id, midtermResult, status } = body;
-    const [modalOpen, setModalOpen] = useState(false);
     const [selectedResult, setSelectedResult] = useState(null);
+    const [IsSubscribed, setIsSubscribed] = useState(false);
     const statusColor = {
         Accepted: 'green',
         OpenForAssigning: 'blue',
@@ -19,16 +20,37 @@ const CourseMember = ({ body, memberType, userRole }) => {
         Failed: 'red'
     };
 
-    const handleEditResult = (resultType) => {
-        // Open EditModal with studentId and result value (midtermResult or finalResult)
-        setModalOpen(true);
-        setSelectedResult(resultType);
-      };
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await myCoursesApi.subscribed();
+
+            if (data.length > 0){
+                data.some((course) => course.id === id) ? setIsSubscribed(true) : setIsSubscribed(false);
+            }
+        };
+        
+        fetchData();
+    }, [IsSubscribed]);
+
+    const [modalData, setModalData] = useState({
+        name: name,
+        markType: '',
+        studentId: id
+    })
+    const [showMarkStatusModal, setShowMarkStatusModal] = useState(false);
+    const handleModalClose = () => setShowMarkStatusModal(false);
+    const handleModalOpen = () => setShowMarkStatusModal(true);
+
+    const handleEditResult = (markType) => {
+        setModalData({...modalData, 'markType': markType});
+
+        handleModalOpen();
+    }
 
     const memberBody = () => {
         return (
         <>
-                <h5 style={{ fontSize: '1.1rem' }}>{name} {memberType === 'teacher' && <span className="green-square">основной</span>}</h5>
+                <h5 style={{ fontSize: '1.1rem' }}> {name} {isMain && <span className="green-square">основной</span>}</h5>
                 {memberType === 'student' && (
                     <>
                         <span style={{ color: 'grey' }}>Статус – </span>
@@ -53,7 +75,6 @@ const CourseMember = ({ body, memberType, userRole }) => {
                             <PendingButtons studentId={id} />
                         </Col>
                     </Row>
-                    
                 )
             case 'Accepted':
                 return (
@@ -105,14 +126,7 @@ const CourseMember = ({ body, memberType, userRole }) => {
     return (
         <>
             {renderContent()}
-            {/* <EditModal
-            show={modalOpen}
-            studentId={body.id}
-            // Pass initial result based on selectedResult
-            midtermResult={selectedResult === 'midterm' ? body.midtermResult : null}
-            finalResult={selectedResult === 'final' ? body.finalResult : null}
-            onClose={() => setModalOpen(false)}
-            /> */}
+            {isPrivileged && <EditMarkModal data={body} showModal={showMarkStatusModal} handleCloseModal={handleModalClose}/>}
         </>
     );
 };

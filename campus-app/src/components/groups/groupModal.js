@@ -9,7 +9,6 @@ const GroupModal = ({ show, onHide, title, onSave, data }) => {
     }, [data.name]);
     
     const handleSave = () => {
-        console.log(data, groupName);
         onSave(data.id, {name: groupName});
     };
 

@@ -28,12 +28,18 @@ async function editProfile(body = null) {
     return response.data;
 }
 
+async function getRole() {
+    const response = await api.get('roles');
+    return response.data;
+}
+
 const profileApi = {
     logout: logout,
     registration: registration,
     login: login,
     getProfile: getProfile,
-    editProfile: editProfile
+    editProfile: editProfile,
+    getRole: getRole
 };
 
 export default profileApi;

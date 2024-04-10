@@ -2,14 +2,12 @@ import React, { useState, useEffect, useContext} from 'react';
 import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import 'react-quill/dist/quill.snow.css';
-import CoursesList from './coursesList';
-import groupsApi from '../../api/groupsApi';
+import groupsApi from '../../../api/groupsApi';
 import UserSelector from '../../shared/userSelector';
 import coursesApi from '../../../api/coursesApi';
 
-const AddTeacherModal = () => {
+const AddTeacherModal = ({showModal, handleCloseModal}) => {
     const { id } = useParams();
-    const [showModal, setShowModal] = useState(false);
     const [userId, setUserId] = useState('');
     const [allUsers, setAllUsers] = useState([]);
 
@@ -30,11 +28,11 @@ const AddTeacherModal = () => {
         e.preventDefault();
 
         await coursesApi.addTeacherToCourse(id, userId);
-        setShowModal(false);
+        handleCloseModal(false);
     };
 
     return (
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal show={showModal} onHide={() => handleCloseModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Создать новый курс</Modal.Title>
             </Modal.Header>
@@ -43,7 +41,7 @@ const AddTeacherModal = () => {
                     <UserSelector name="mainTeacherId" teachers={allUsers} onSelect={handleMainTeacher}></UserSelector>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Отмена</Button>
+                    <Button variant="secondary" onClick={() => handleCloseModal(false)}>Отмена</Button>
                     <Button variant="primary" type="submit">Создать</Button>
                 </Modal.Footer>
             </Form>

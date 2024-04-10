@@ -1,59 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { Navbar, Nav, Container, NavItem, NavLink, NavDropdown } from 'react-bootstrap';
+import {connect} from 'react-redux';
+import { Navbar, Nav, Container, NavItem, NavLink} from 'react-bootstrap';
 import profileApi from '../../api/profileApi';
-import myCoursesApi from '../../api/myCoursesApi';
+import store from '../../store/store';
+import updateUserRole from '../../store/actions/updateUserRole';
+import updateIsAdmin from '../../store/actions/updateIsAdmin';
 
-const NavBar = () => {
+const NavBar = ({userRole}) => {
     const [authenticated, setAuthenticated] = useState(false);
-    const [userRole, setUserRole] = useState('non'); // (non, user, student, teacher, combo)
     const [userName, setUserName] = useState(null);
 
     const handleLogout = async () => {
         await profileApi.logout();
 
         setAuthenticated(false);
-        setUserRole('non');
+        store.dispatch(updateUserRole('non'));
     };
   
     const checkUserRole = async () => {
         const profile = await profileApi.getProfile();
         
         if (profile == null){
-            setUserRole('non');
+            store.dispatch(updateUserRole('non'));
             setAuthenticated(false);
             return;
         }
         setAuthenticated(true);
         setUserName(profile.fullName);
 
-        const subscribed = await myCoursesApi.subscribed();
-        const teaching = await myCoursesApi.teaching();
+        const roles = await profileApi.getRole();
 
-        if (subscribed.length > 0 && teaching.length > 0) {
-            setUserRole('combo');
-        } else if (subscribed.length > 0) {
-            setUserRole('student');
-        } else if (teaching.length > 0) {
-            setUserRole('teacher');
+        if (roles.isTeacher && roles.isStudent) {
+            store.dispatch(updateUserRole('combo'));
+        } else if (roles.isStudent) {
+            store.dispatch(updateUserRole('student'));
+        } else if (roles.isTeacher) {
+            store.dispatch(updateUserRole('teacher'));
         } else {
-            setUserRole('user');
+            store.dispatch(updateUserRole('user'));
         }
+
+        store.dispatch(updateIsAdmin(roles.isAdmin));
     };
   
     useEffect(() => {
         const fetchData = async () => {
             if (localStorage.getItem('token') != null){
                 await checkUserRole();
+                console.log(userRole);
             }
         };
         
         fetchData();
-      }, [, userRole]);
+      }, [userRole]);
 
     return (
         <Navbar bg="secondary" expand="lg" className="align-top p-3 mb-3 mt-0">
         <Container fluid>
-            <Navbar.Brand href="#" className="h-25 ms-5 text-white">Кампусные курсы</Navbar.Brand>
+            <Navbar.Brand href="/" className="h-25 ms-5 text-white">Кампусные курсы</Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarNav" />
             <Navbar.Collapse id="navbarNav">
             <Nav className="me-auto">
@@ -107,4 +111,8 @@ const NavBar = () => {
     );
 };
 
-export default NavBar;
+const mapStateToProps = state => ({
+    userRole: state.userRole
+});
+
+export default connect(mapStateToProps)(NavBar);

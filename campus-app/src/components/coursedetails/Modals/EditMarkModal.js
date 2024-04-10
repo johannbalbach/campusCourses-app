@@ -5,24 +5,23 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import coursesApi from '../../../api/coursesApi';
 
-const EditStatusModal = ({data}) => {
+const EditMarkModal = ({data, showModal, handleCloseModal}) => {
     const { id } = useParams();
-    const [showModal, setShowModal] = useState(false);
     const [mark, setMark] = useState();
     const [name, markType, studentId] = data;
 
-    const handleSaveCourse = async (e) => {
+    const handleSaveCourse = async (e) => { 
         e.preventDefault();
         if (mark == ''){
             return;
         }
 
         await coursesApi.editStudentMark(id, studentId, {markType: markType, mark: mark});
-        setShowModal(false);
+        handleCloseModal(false);
     };
 
     return (
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal show={showModal} onHide={() => handleCloseModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Изменение статуса курса</Modal.Title>
             </Modal.Header>
@@ -38,7 +37,7 @@ const EditStatusModal = ({data}) => {
                             id="passed"
                             value="Passed"
                             checked={mark === "Passed"}
-                            onChange={handleInputChange}
+                            onChange={((e) =>{setMark(e)})}
                         />
                         <Form.Check
                             inline
@@ -47,12 +46,12 @@ const EditStatusModal = ({data}) => {
                             id="failed"
                             value="Failed"
                             checked={mark === "Failed"}
-                            onChange={handleInputChange}    
+                            onChange={((e) =>{setMark(e)})}    
                         />
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Отмена</Button>
+                    <Button variant="secondary" onClick={() => handleCloseModal(false)}>Отмена</Button>
                     <Button variant="primary" type="submit">Создать</Button>
                 </Modal.Footer>
             </Form>
@@ -60,4 +59,4 @@ const EditStatusModal = ({data}) => {
     );
 }
 
-export default EditStatusModal;
+export default EditMarkModal;

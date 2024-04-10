@@ -11,6 +11,7 @@ async function signUpForCourse(id) {
 }
 
 async function editCourseStatus(id, data) {
+    ///DOBAVIT CHE-TO
     const response = await api.post(`courses/${id}/status`, data);
     return response.data;
 }
@@ -21,6 +22,8 @@ async function editStudentStatus(id, studentId, data) {
 }
 
 async function createCourseNotification(id, data) {
+    console.log(id, data);
+    data.isImportant ? console.log("OK") : console.log("NET");
     const response = await api.post(`courses/${id}/notifications`, data);
     return response.data;
 }
@@ -33,6 +36,7 @@ async function editStudentMark(id, studentId, data) {
 async function editCourseRequirementsAndAnnotations(id, data) {
     const response = await api.put(`courses/${id}/requirements-and-annotations`, data);
     return response.data;
+
 }
 
 async function editCourse(id, data) {

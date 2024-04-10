@@ -5,10 +5,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import coursesApi from '../../../api/coursesApi';
 
-const EditStatusModal = ({data}) => {
+const EditStatusModal = ({data, showModal, handleCloseModal}) => {
     const { id } = useParams();
-    const [showModal, setShowModal] = useState(false);
-    const [status] = data;
+    const [status, setStatus] = useState(data.status);
 
     const handleSaveCourse = async (e) => {
         e.preventDefault();
@@ -16,12 +15,12 @@ const EditStatusModal = ({data}) => {
             return;
         }
 
-        await coursesApi.editCourse(id, {status: status});
-        setShowModal(false);
+        await coursesApi.editCourseStatus(id, {status: status});
+        handleCloseModal(false);
     };
 
     return (
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal show={showModal} onHide={() => handleCloseModal(false)} size="lg">
             <Modal.Header closeButton>
                 <Modal.Title>Изменение статуса курса</Modal.Title>
             </Modal.Header>
@@ -32,23 +31,23 @@ const EditStatusModal = ({data}) => {
                         <br></br>
                         <Form.Check
                             inline
-                            label="Открыт для записи"
+                            label="В процессе обучения"
                             type="checkbox"
                             id="open"
                             name="status"
                             value="Started"
                             checked={status === "Started"}
-                            onChange={handleInputChange}
+                            onChange={() => {setStatus("Started")}}
                         />
                         <Form.Check
                             inline
-                            label="В процессе"
+                            label="Открыт для записи"
                             type="checkbox"
                             id="inprocess"
                             name="status"
                             value="OpenForAssigning"
                             checked={status === "OpenForAssigning"}
-                            onChange={handleInputChange}    
+                            onChange={() => {setStatus("OpenForAssigning")}}
                         />
                         <Form.Check
                             inline
@@ -58,12 +57,12 @@ const EditStatusModal = ({data}) => {
                             name="status"
                             value="Finished "
                             checked={status === "Finished"}
-                            onChange={handleInputChange}    
+                            onChange={() => {setStatus("Finished")}}
                         />
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>Отмена</Button>
+                    <Button variant="secondary" onClick={() => handleCloseModal(false)}>Отмена</Button>
                     <Button variant="primary" type="submit">Создать</Button>
                 </Modal.Footer>
             </Form>

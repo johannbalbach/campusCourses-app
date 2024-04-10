@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
+import EditStatusModal from './Modals/EditStatusModal';
+import coursesApi from '../../api/coursesApi';
+import myCoursesApi from '../../api/myCoursesApi';
 
-const CourseDetails = ({ course }) => {
-    const [userRole, setUserRole] = useState('admin');
+const CourseDetails = ({ course, isPrivileged}) => {
     const { id, name, startYear, semester, maximumStudentsCount, remainingSlotsCount, studentsInQueueCount, status } = course;
     const statusColor = {
         Started: 'green',
@@ -10,31 +12,62 @@ const CourseDetails = ({ course }) => {
         Finished: 'red',
         Created: 'grey'
     };
+    const [IsSubscribed, setIsSubscribed] = useState(false);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await myCoursesApi.subscribed();
+
+            if (data.length > 0){
+                data.some((course) => course.id === id) ? setIsSubscribed(true) : setIsSubscribed(false);
+
+                console.log(data, IsSubscribed);
+            }
+        };
+        
+        fetchData();
+    }, [IsSubscribed]);
+
+    const [showEditStatusModal, setShowEditStatusModal] = useState(false);
+    const handleModalClose = () => setShowEditStatusModal(false);
+    const handleModalOpen = () => setShowEditStatusModal(true);
+
+    const handleAssignment = async () => {
+        await coursesApi.signUpForCourse(id);
+    }
     return (
         <>
         <Card className="" style={{borderRadius: '0', backgroundColor: '#f8f9fa'}}>
             <Card.Body>
-            <Row className="">
-                    <Col className='col-sm-8 mt-auto mb-auto'>
-                        <h5>{name}</h5>
-                    </Col>
-                    <Col className='col-sm-4'>
-                        {userRole === 'admin' && (
-                            <Button style={{borderRadius: '0'}} variant="warning" className="float-end">
-                                Изменить
-                            </Button>
-                        )}
-                    </Col>
+                <Row className="">
+                    <h5>{name}</h5>
                 </Row>
             </Card.Body>
         </Card>
         <Card style={{borderRadius: '0'}}>
             <Card.Body>
                 <Row className="mb-3">
-                    <Col>
+                    <Col className='col-sm-8 mt-auto mb-auto'>
                         <h6>Статус курса:</h6>
                         <span style={{ color: statusColor[status] }}>{status}</span>
+                    </Col>
+                    <Col className='col-sm-4'>
+                        {isPrivileged && (
+                            <Button style={{borderRadius: '0'}} variant="warning" className="float-end" onClick={handleModalOpen}>
+                                ИЗМЕНИТЬ
+                            </Button>
+                        )}
+                        {!isPrivileged && status == 'OpenForAssigning' && ( IsSubscribed ? (
+                                <Button style={{borderRadius: '0'}} variant="outline-primary" className="float-end" onClick={handleAssignment} disabled>
+                                Записаться на курс
+                                </Button> 
+                            ) : (
+                                <Button style={{borderRadius: '0'}} variant="primary" className="float-end" onClick={handleAssignment}>
+                                Записаться на курс
+                                </Button>
+                            )
+ 
+                        )}
                     </Col>
                 </Row>
                 <Row className="mb-3">
@@ -63,6 +96,8 @@ const CourseDetails = ({ course }) => {
                 </Row>
             </Card.Body>
         </Card>
+
+        {isPrivileged && <EditStatusModal data={course} showModal={showEditStatusModal} handleCloseModal={handleModalClose}/>}
         </>
     );
 };
