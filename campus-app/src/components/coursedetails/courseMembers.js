@@ -3,7 +3,7 @@ import { Card, Nav, Row, Col, Button, Modal } from 'react-bootstrap';
 import CourseMember from './courseMember';
 import AddTeacherModal from './Modals/AddTeacherModal';
 
-const CourseMembers = ({ members, isPrivileged}) => {
+const CourseMembers = ({ members, isPrivileged, IsSubscribed}) => {
     const { teachers, students } = members;
     const [activeTab, setActiveTab] = useState('teachers');
     const [selectedStudent, setSelectedStudent] = useState(null);
@@ -29,7 +29,7 @@ const CourseMembers = ({ members, isPrivileged}) => {
                             </Button>
                         )}
                         {teachers.map((teacher, index) => (
-                            <CourseMember key={index} body={teacher} memberType="teacher" />
+                            <CourseMember key={index} body={teacher} memberType="teacher" isPrivileged={isPrivileged} IsSubscribed={IsSubscribed} />
                         ))}
                     </>
                 );
@@ -38,7 +38,7 @@ const CourseMembers = ({ members, isPrivileged}) => {
                     <>
                         {students.map((student, index) => (
                             <div key={index}>
-                                <CourseMember body={student} memberType="student" isPrivileged={isPrivileged} />
+                                <CourseMember body={student} memberType="student" isPrivileged={isPrivileged} IsSubscribed={IsSubscribed}/>
                             </div>
                         ))}
                     </>

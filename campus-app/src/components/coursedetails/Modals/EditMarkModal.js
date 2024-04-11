@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useEffect, useState} from 'react';
 import {Button, Modal, Form } from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import ReactQuill from 'react-quill';
@@ -8,7 +8,15 @@ import coursesApi from '../../../api/coursesApi';
 const EditMarkModal = ({data, showModal, handleCloseModal}) => {
     const { id } = useParams();
     const [mark, setMark] = useState();
-    const [name, markType, studentId] = data;
+    const [name, setName] = useState(data.name);
+    const [markType, setMarkType] = useState(data.markType);
+    const [studentId, setStudentId] = useState(data.studentId);
+
+    useEffect(() => {
+        setMarkType(data.markType);
+        setName(data.name);
+        setStudentId(data.studentId);
+    }, [data])
 
     const handleSaveCourse = async (e) => { 
         e.preventDefault();
@@ -37,7 +45,7 @@ const EditMarkModal = ({data, showModal, handleCloseModal}) => {
                             id="passed"
                             value="Passed"
                             checked={mark === "Passed"}
-                            onChange={((e) =>{setMark(e)})}
+                            onChange={((e) =>{setMark(e.target.value)})}
                         />
                         <Form.Check
                             inline
@@ -46,7 +54,7 @@ const EditMarkModal = ({data, showModal, handleCloseModal}) => {
                             id="failed"
                             value="Failed"
                             checked={mark === "Failed"}
-                            onChange={((e) =>{setMark(e)})}    
+                            onChange={((e) =>{setMark(e.target.value)})}    
                         />
                     </Form.Group>
                 </Modal.Body>

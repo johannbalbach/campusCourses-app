@@ -5,11 +5,12 @@ import './courseCard.css';
 import PendingButtons from './PeddingButtons';
 import EditMarkModal from './Modals/EditMarkModal';
 import myCoursesApi from '../../api/myCoursesApi';
+import {connect} from 'react-redux';
 
-const CourseMember = ({ body, memberType, isPrivileged }) => {
-    const { email, isMain, name, finalResult, id, midtermResult, status } = body;
+const CourseMember = ({ body, memberType, isPrivileged, IsSubscribed, email }) => {
+    const [memberEmail, setMemberEmail] = useState(body.email);
+    const {isMain, name, finalResult, id, midtermResult, status } = body;
     const [selectedResult, setSelectedResult] = useState(null);
-    const [IsSubscribed, setIsSubscribed] = useState(false);
     const statusColor = {
         Accepted: 'green',
         OpenForAssigning: 'blue',
@@ -17,24 +18,14 @@ const CourseMember = ({ body, memberType, isPrivileged }) => {
         Created: 'grey',
         NotDefined: 'grey',
         Successed: 'green',
-        Failed: 'red'
+        Failed: 'red',
+        Declined: 'red',
+        InQueue: 'blue'
     };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await myCoursesApi.subscribed();
-
-            if (data.length > 0){
-                data.some((course) => course.id === id) ? setIsSubscribed(true) : setIsSubscribed(false);
-            }
-        };
-        
-        fetchData();
-    }, [IsSubscribed]);
 
     const [modalData, setModalData] = useState({
         name: name,
-        markType: '',
+        markType: 'midterm',
         studentId: id
     })
     const [showMarkStatusModal, setShowMarkStatusModal] = useState(false);
@@ -50,22 +41,22 @@ const CourseMember = ({ body, memberType, isPrivileged }) => {
     const memberBody = () => {
         return (
         <>
-                <h5 style={{ fontSize: '1.1rem' }}> {name} {isMain && <span className="green-square">основной</span>}</h5>
-                {memberType === 'student' && (
-                    <>
-                        <span style={{ color: 'grey' }}>Статус – </span>
-                        <span style={{ color: statusColor[status] }}>{status}</span>
-                        <br></br>
-                    </>
-                )}
-                <span style={{ color: 'grey' }}>{email}</span>
+            <h5 style={{ fontSize: '1.1rem' }}> {name} {isMain && <span className="green-square">основной</span>}</h5>
+            {memberType === 'student' && (
+                <>
+                    <span style={{ color: 'grey' }}>Статус – </span>
+                    <span style={{ color: statusColor[status] }}>{status}</span>
+                    <br></br>
+                </>
+            )}
+            <span style={{ color: 'grey' }}>{memberEmail}</span>
         </>
         );
       };
   
     const renderStatusContent = () => {
         switch (status) {
-            case 'Pending':
+            case 'InQueue':
                 return (
                     <Row>
                         <Col className='col-8'>
@@ -82,26 +73,39 @@ const CourseMember = ({ body, memberType, isPrivileged }) => {
                         <Col className='col-4'>
                             {memberBody()}
                         </Col>
-                        <Col className='col-4'>
-                            <Link to="#" onClick={() => handleEditResult('midterm')}>
+                        {IsSubscribed && (memberEmail === email) && (<>
+                            <Col className='col-4'>
+                                <span> Промежуточная аттестация – </span>
+                                <span className='green-square' style={{ backgroundColor: statusColor[midtermResult] }}>{midtermResult}</span>
+                            </Col>
+                            <Col className='col-4'>
+                                <span> Финальная аттестация – </span>
+                                <span className='green-square' style={{ backgroundColor: statusColor[finalResult] }}>{finalResult}</span>
+                            </Col>
+                        </>)}
+                        {isPrivileged && (<>
+                            <Col className='col-4'>
+                            <Link to="#" onClick={() => handleEditResult('Midterm')}>
                                 Промежуточная аттестация 
                             </Link>
                             <span> – </span>
                             <span className='green-square' style={{ backgroundColor: statusColor[midtermResult] }}>{midtermResult}</span>
-                        </Col>
-                        <Col className='col-4'>
-                            <Link to="#" onClick={() => handleEditResult('final')}>
-                                Финальная аттестация
-                            </Link>
-                            <span> – </span>
-                            <span className='green-square' style={{ backgroundColor: statusColor[finalResult] }}>{finalResult}</span>
-                        </Col>
+                            </Col>
+                            <Col className='col-4'>
+                                <Link to="#" onClick={() => handleEditResult('Final ')}>
+                                    Финальная аттестация
+                                </Link>
+                                <span> – </span>
+                                <span className='green-square' style={{ backgroundColor: statusColor[finalResult] }}>{finalResult}</span>
+                            </Col>
+                        </>)}
                     </Row>
                 );
-            case 'Rejected':
+            case 'Declined':
                 return (
-                <>
-                    {memberBody()}
+                <>  
+                    {IsSubscribed && (memberEmail === email) && (memberBody())}
+                    {isPrivileged && (memberBody())}
                 </>);
             default:
                 return null;
@@ -126,9 +130,13 @@ const CourseMember = ({ body, memberType, isPrivileged }) => {
     return (
         <>
             {renderContent()}
-            {isPrivileged && <EditMarkModal data={body} showModal={showMarkStatusModal} handleCloseModal={handleModalClose}/>}
+            {isPrivileged && <EditMarkModal data={modalData} showModal={showMarkStatusModal} handleCloseModal={handleModalClose}/>}
         </>
     );
 };
 
-export default CourseMember;
+const mapStateToProps = state => ({
+    email: state.email
+});
+
+export default connect(mapStateToProps)(CourseMember);

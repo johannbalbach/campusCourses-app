@@ -2,7 +2,8 @@ import { createStore } from 'redux';
 
 const initialState = {
     userRole: 'non',  // (non, user, student, teacher, combo)
-    isAdmin: false
+    isAdmin: false,
+    email: ''
   };
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +17,11 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isAdmin: action.payload,
+            }
+        case 'UPDATE_EMAIL':
+            return{
+                ...state,
+                email: action.payload,
             }
         default:
             return state;

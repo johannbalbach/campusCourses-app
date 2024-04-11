@@ -7,15 +7,29 @@ async function logout() {
 }
 
 async function registration(body = null) {
-    const response = await api.post('registration', body);
-    localStorage.setItem('token', response.data.token);
-    window.location.href = '/';
+    try {
+        const response = await api.post('registration', body);
+        localStorage.setItem('token', response.data.token);
+        window.location.href = '/';
+    } catch (error) {
+        if (error.response.status === 409){
+            alert("пользователь с таким email уже существует");
+        }
+    }
+    
 }
 
 async function login(body = null) {
-    const response = await api.post('login', body);
-    localStorage.setItem('token', response.data.token);
-    window.location.href = '/';
+    try {
+        const response = await api.post('login', body);
+        localStorage.setItem('token', response.data.token);
+        window.location.href = '/'
+    } catch (error) {
+        if (error.response.status === 409){
+            alert("пользователь с таким email уже существует");
+        }
+    }
+;
 }
 
 async function getProfile() {
@@ -25,6 +39,8 @@ async function getProfile() {
 
 async function editProfile(body = null) {
     const response = await api.put('profile', body);
+    window.location.href = `/profile`;
+
     return response.data;
 }
 

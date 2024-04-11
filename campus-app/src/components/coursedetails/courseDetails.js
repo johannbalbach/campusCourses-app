@@ -4,7 +4,7 @@ import EditStatusModal from './Modals/EditStatusModal';
 import coursesApi from '../../api/coursesApi';
 import myCoursesApi from '../../api/myCoursesApi';
 
-const CourseDetails = ({ course, isPrivileged}) => {
+const CourseDetails = ({ course, isPrivileged, IsSubscribed}) => {
     const { id, name, startYear, semester, maximumStudentsCount, remainingSlotsCount, studentsInQueueCount, status } = course;
     const statusColor = {
         Started: 'green',
@@ -12,21 +12,6 @@ const CourseDetails = ({ course, isPrivileged}) => {
         Finished: 'red',
         Created: 'grey'
     };
-    const [IsSubscribed, setIsSubscribed] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await myCoursesApi.subscribed();
-
-            if (data.length > 0){
-                data.some((course) => course.id === id) ? setIsSubscribed(true) : setIsSubscribed(false);
-
-                console.log(data, IsSubscribed);
-            }
-        };
-        
-        fetchData();
-    }, [IsSubscribed]);
 
     const [showEditStatusModal, setShowEditStatusModal] = useState(false);
     const handleModalClose = () => setShowEditStatusModal(false);

@@ -41,7 +41,7 @@ const CreateNotificationModal = ({showModal, handleCloseModal}) => {
                             type="checkbox"
                             id="important"
                             value={true}
-                            onChange={(e) =>{setFormData({...formData, 'isImportant': true})}}
+                            onChange={() =>{setFormData({...formData, 'isImportant': true})}}
                             className='ms-3'
                         />
                     </Form.Group>

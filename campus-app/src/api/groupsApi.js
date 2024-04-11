@@ -6,7 +6,6 @@ async function getGroups() {
 }
 
 async function createGroup(groupId, data) {
-    console.log(data);
     await api.post('groups', data);
     window.location.href = '/groups';
 }

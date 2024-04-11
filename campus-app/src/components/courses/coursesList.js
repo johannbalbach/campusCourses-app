@@ -37,23 +37,21 @@ const CoursesList = ({ type, id = 0 }) => {
                     <Card style={{borderRadius: '0'}}>
                         <Link to={`/courses/${id}`} className='text-dark' style={{textDecoration: 'none'}}>
                             <Card.Body>
-                                <Card.Text style={{ fontSize: '1rem' }}>
-                                    <Row className=''>
-                                        <div className='col-9'>
-                                            <h5 style={{ fontSize: '1.3rem' }}>{name}</h5>
-                                        </div>
-                                        <div className='col-3 justify-content-end align-items-end d-flex mb-auto'>
-                                            <span style={{ color: statusColor[status] }}>{status}</span>
-                                        </div>
-                                    </Row>
-                                    <span>Учебный год – </span>{startYear}-{startYear + 1}
-                                    <br />
-                                    <span>Семестр – </span>{semester}
-                                    <br />
-                                    <span style={{ color: 'grey' }}>Мест всего – </span>{maximumStudentsCount}
-                                    <br />
-                                    <span style={{ color: 'grey' }}>Мест свободно – </span>{remainingSlotsCount}
-                                </Card.Text>
+                                <Row className=''>
+                                    <Col className='col-9'>
+                                        <h5 style={{ fontSize: '1.3rem' }}>{name}</h5>
+                                    </Col>
+                                    <Col className='col-3 justify-content-end align-items-end d-flex mb-auto'>
+                                        <span style={{ color: statusColor[status] }}>{status}</span>
+                                    </Col>
+                                </Row>
+                                <span>Учебный год – </span>{startYear}-{startYear + 1}
+                                <br />
+                                <span>Семестр – </span>{semester}
+                                <br />
+                                <span style={{ color: 'grey' }}>Мест всего – </span>{maximumStudentsCount}
+                                <br />
+                                <span style={{ color: 'grey' }}>Мест свободно – </span>{remainingSlotsCount}
                             </Card.Body>
                         </Link>
                     </Card>

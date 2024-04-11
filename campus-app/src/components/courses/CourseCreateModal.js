@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import groupsApi from '../../api/groupsApi';
 import UserSelector from '../shared/userSelector';
 
-const CourseCreateModal = ({data, showModal, handleCloseModal}) => {
+const CourseCreateModal = ({showModal, handleCloseModal}) => {
     const {id} = useParams();
     const [formData, setFormData] = useState({
         name: '',
@@ -51,7 +51,6 @@ const CourseCreateModal = ({data, showModal, handleCloseModal}) => {
         const { name, value, pattern } = e.target;
         setFormData({ ...formData, [name]: value });
         name == 'startYear' ? setIsYearValid(value.match(pattern)) : setIsCountValid(value.match(pattern));
-        console.log(name, value, pattern, isCountValid, isYearValid);
     };
 
     const handleMainTeacher = (e) => {

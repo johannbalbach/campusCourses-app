@@ -2,6 +2,7 @@ import api from './api';
 
 async function getCourseDetails(id) {
     const response = await api.get(`courses/${id}/details`);
+    
     return response.data;
 }
 
@@ -11,32 +12,39 @@ async function signUpForCourse(id) {
 }
 
 async function editCourseStatus(id, data) {
-    ///DOBAVIT CHE-TO
+    ///DOBAVIT CHE-TO NA ONTLOV OSHIBOK
     const response = await api.post(`courses/${id}/status`, data);
+    window.location.href = `/courses/${id}`;
+
     return response.data;
 }
 
 async function editStudentStatus(id, studentId, data) {
     const response = await api.post(`courses/${id}/student-status/${studentId}`, data);
+    window.location.href = `/courses/${id}`;
+
     return response.data;
 }
 
 async function createCourseNotification(id, data) {
-    console.log(id, data);
-    data.isImportant ? console.log("OK") : console.log("NET");
     const response = await api.post(`courses/${id}/notifications`, data);
+    window.location.href = `/courses/${id}`;
+
     return response.data;
 }
 
 async function editStudentMark(id, studentId, data) {
     const response = await api.post(`courses/${id}/marks/${studentId}`, data);
+    window.location.href = `/courses/${id}`;
+
     return response.data;
 }
 
 async function editCourseRequirementsAndAnnotations(id, data) {
     const response = await api.put(`courses/${id}/requirements-and-annotations`, data);
-    return response.data;
+    window.location.href = `/courses/${id}`;
 
+    return response.data;
 }
 
 async function editCourse(id, data) {

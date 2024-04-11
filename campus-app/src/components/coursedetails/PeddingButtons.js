@@ -23,10 +23,10 @@ const PendingButtons = ({ studentId }) => {
       <>
         {isPending && (
         <>
-            <Button style={{borderRadius: '0', fontSize: '0.8rem'}} variant="primary" className='mb-1 mt-1' onClick={handleAccept}>
+            <Button style={{borderRadius: '0', fontSize: '0.9rem'}} variant="primary" className='mb-1 mt-1' onClick={handleAccept}>
                 Принять
             </Button>
-            <Button style={{borderRadius: '0', fontSize: '0.8rem'}} variant="danger" className='mb-1 mt-1' onClick={handleReject}>
+            <Button style={{borderRadius: '0', fontSize: '0.9rem'}} variant="danger" className='mb-1 mt-1 ms-1' onClick={handleReject}>
                 Отклонить
             </Button>
         </>

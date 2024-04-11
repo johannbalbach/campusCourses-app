@@ -16,9 +16,9 @@ const CourseCard = ({ body, isPrivileged }) => {
     const renderTabContent = () => {
         switch (activeTab) {
             case 'requirements':
-                return <div dangerouslySetInnerHTML={{ __html: requirements }}></div>;
+                return renderHtmlContent(requirements);
             case 'annotations':
-                return <div dangerouslySetInnerHTML={{ __html: annotations }}></div>;
+                return renderHtmlContent(annotations);
             case 'notifications':
                 return (
                   <div>
@@ -45,6 +45,17 @@ const CourseCard = ({ body, isPrivileged }) => {
             default:
                 return null;
         }
+    };
+
+    const renderHtmlContent = (htmlContent) => {
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = htmlContent;
+        const images = wrapper.querySelectorAll('img');
+        images.forEach(img => {
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+        });
+        return <div dangerouslySetInnerHTML={{ __html: wrapper.innerHTML }} />;
     };
 
     return (

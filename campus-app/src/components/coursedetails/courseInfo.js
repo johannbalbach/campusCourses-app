@@ -14,21 +14,25 @@ const CourseInfo = ({userRole, isAdmin}) => {
     const { id } = useParams();
     const [course, setCourse] = useState();
     const [isCourseTeacher, setIsCourseTeacher] = useState(false);
+    const [IsSubscribed, setIsSubscribed] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
             const data = await coursesApi.getCourseDetails(id);
 
             setCourse(data);
-            console.log(data);
             if (userRole === 'teacher'){
                 const teaching = await myCoursesApi.teaching();
                 teaching.some((course) => course.id === id) ? setIsCourseTeacher(true) : setIsCourseTeacher(false);
             }
+            if (userRole === 'student'){
+                const subscribed = await myCoursesApi.subscribed();
+                subscribed.some((course) => course.id === id) ? setIsSubscribed(true) : setIsSubscribed(false);
+            }
         };
         
         fetchData();
-    }, [id, userRole, isCourseTeacher, isAdmin]);
+    }, [id, userRole, isCourseTeacher, isAdmin, IsSubscribed]);
 
 
     const [showEditCourseModal, setShowEditCourseModal] = useState(false);
@@ -70,9 +74,9 @@ const CourseInfo = ({userRole, isAdmin}) => {
                     </Col>
                     </Row>
 
-                    <CourseDetails course={course} isPrivileged={isAdmin || isCourseTeacher}/>
+                    <CourseDetails course={course} isPrivileged={isAdmin || isCourseTeacher} IsSubscribed={IsSubscribed}/>
                     <CourseCard body ={course} isPrivileged={isAdmin || isCourseTeacher}/>
-                    <CourseMembers members ={course} isPrivileged={isAdmin || isCourseTeacher}/>
+                    <CourseMembers members ={course} isPrivileged={isAdmin || isCourseTeacher} IsSubscribed={IsSubscribed}/>
                 </div>
 
 

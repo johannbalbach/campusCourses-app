@@ -5,6 +5,7 @@ import profileApi from '../../api/profileApi';
 import store from '../../store/store';
 import updateUserRole from '../../store/actions/updateUserRole';
 import updateIsAdmin from '../../store/actions/updateIsAdmin';
+import updateEmail from '../../store/actions/updateEmail';
 
 const NavBar = ({userRole}) => {
     const [authenticated, setAuthenticated] = useState(false);
@@ -27,6 +28,7 @@ const NavBar = ({userRole}) => {
         }
         setAuthenticated(true);
         setUserName(profile.fullName);
+        store.dispatch(updateEmail(profile.email));
 
         const roles = await profileApi.getRole();
 
@@ -47,7 +49,6 @@ const NavBar = ({userRole}) => {
         const fetchData = async () => {
             if (localStorage.getItem('token') != null){
                 await checkUserRole();
-                console.log(userRole);
             }
         };
         
