@@ -3,7 +3,7 @@ import { Card, ListGroup, Nav, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './courseCard.css';
 import PendingButtons from './PeddingButtons';
-import EditMarkModal from './Modals/EditMarkModal';
+import EditMarkModal from '../shared/Modals/EditMarkModal';
 import myCoursesApi from '../../api/myCoursesApi';
 import {connect} from 'react-redux';
 

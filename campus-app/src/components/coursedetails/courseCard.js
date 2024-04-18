@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Nav, Button, Row, Col } from 'react-bootstrap';
 import './courseCard.css'
-import CreateNotificationModal from './Modals/CreateNotificationModal';
+import CreateNotificationModal from '../shared/Modals/CreateNotificationModal';
 
 const CourseCard = ({ body, isPrivileged }) => {
     const { requirements, annotations, notifications } = body;

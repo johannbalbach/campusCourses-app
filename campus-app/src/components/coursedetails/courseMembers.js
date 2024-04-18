@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Nav, Row, Col, Button, Modal } from 'react-bootstrap';
 import CourseMember from './courseMember';
-import AddTeacherModal from './Modals/AddTeacherModal';
+import AddTeacherModal from '../shared/Modals/AddTeacherModal';
 
 const CourseMembers = ({ members, isPrivileged, isAdmin, IsSubscribed}) => {
     const { teachers, students } = members;

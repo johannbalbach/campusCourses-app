@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Row, Col, Button } from 'react-bootstrap';
-import EditStatusModal from './Modals/EditStatusModal';
+import EditStatusModal from '../shared/Modals/EditStatusModal';
 import coursesApi from '../../api/coursesApi';
 import myCoursesApi from '../../api/myCoursesApi';
 

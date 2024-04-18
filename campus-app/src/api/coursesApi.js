@@ -12,11 +12,15 @@ async function signUpForCourse(id) {
 }
 
 async function editCourseStatus(id, data) {
-    ///DOBAVIT CHE-TO NA ONTLOV OSHIBOK
-    const response = await api.post(`courses/${id}/status`, data);
-    window.location.href = `/courses/${id}`;
-
-    return response.data;
+    try {
+        const response = await api.post(`courses/${id}/status`, data);
+        window.location.href = `/courses/${id}`;
+        return response.data;
+    } catch (error) {
+        if (error.response.status === 400){
+            alert("статус курса не может быть изменён на прошлый");
+        }
+    }
 }
 
 async function editStudentStatus(id, studentId, data) {
