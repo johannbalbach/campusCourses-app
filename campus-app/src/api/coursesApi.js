@@ -59,6 +59,8 @@ async function deleteCourse(id) {
 
 async function addTeacherToCourse(id, data) {
     const response = await api.post(`courses/${id}/teachers`, data);
+    window.location.href = `/courses/${id}`;
+    
     return response.data;
 }
 

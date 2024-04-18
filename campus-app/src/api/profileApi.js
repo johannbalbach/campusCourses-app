@@ -28,6 +28,9 @@ async function login(body = null) {
         if (error.response.status === 409){
             alert("пользователь с таким email уже существует");
         }
+        else if (error.response.status === 400){
+            alert("вы ввели неправильный логин или пароль");
+        }
     }
 ;
 }
@@ -53,7 +56,7 @@ const profileApi = {
     logout: logout,
     registration: registration,
     login: login,
-    getProfile: getProfile,
+    getProfile: getProfile, 
     editProfile: editProfile,
     getRole: getRole
 };

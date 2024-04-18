@@ -7,7 +7,7 @@ import 'react-quill/dist/quill.snow.css';
 import CoursesList from './coursesList';
 import groupsApi from '../../api/groupsApi';
 import UserSelector from '../shared/userSelector';
-import CourseCreateModal from './CourseCreateModal';
+import CourseCreateModal from '../shared/Modals/CourseCreateModal';
 
 const GroupCourses = ({isAdmin}) => {
     const location = useLocation();

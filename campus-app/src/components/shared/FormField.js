@@ -1,21 +1,21 @@
 import React from 'react';
 import { Form, Col, Row } from 'react-bootstrap';
 
-const FormField = ({ controlId, label, value, onChange, type, placeholder, isValid, pattern, feedbackText, colSize = 0 }) => {
+const FormField = ({ controlId, label, value, onChange, type, placeholder, isValid, pattern, feedbackText, max, colSize = 0 }) => {
   return (
     <Form.Group as={Row} className="mb-3" controlId={controlId}>
       {colSize > 0 ? (
         <>
           <Form.Label column sm={12 - colSize}>{label}</Form.Label>
           <Col sm={colSize}>
-            <InnerForm value={value} onChange={onChange} type={type} placeholder={placeholder} isValid={isValid} pattern={pattern} feedbackText={feedbackText} />
+            <InnerForm value={value} onChange={onChange} type={type} placeholder={placeholder} isValid={isValid} pattern={pattern} feedbackText={feedbackText} max={max}/>
           </Col>
         </>
       ) : (
         <>
           <Form.Label>{label}</Form.Label>
           <Col>
-            <InnerForm value={value} onChange={onChange} type={type} placeholder={placeholder} isValid={isValid} pattern={pattern} feedbackText={feedbackText} />
+            <InnerForm value={value} onChange={onChange} type={type} placeholder={placeholder} isValid={isValid} pattern={pattern} feedbackText={feedbackText} max={max}/>
           </Col>
         </>
       )}
@@ -23,7 +23,7 @@ const FormField = ({ controlId, label, value, onChange, type, placeholder, isVal
   );
 };
 
-const InnerForm = ({ value, onChange, type, placeholder, isValid, pattern, feedbackText }) => {
+const InnerForm = ({ value, onChange, type, placeholder, isValid, pattern, feedbackText, max }) => {
   return (
     <>
       <Form.Control
@@ -34,6 +34,7 @@ const InnerForm = ({ value, onChange, type, placeholder, isValid, pattern, feedb
         required
         isInvalid={!isValid}
         pattern={pattern}
+        max={max}
       />
       <Form.Control.Feedback type="invalid">{feedbackText}</Form.Control.Feedback>
     </>

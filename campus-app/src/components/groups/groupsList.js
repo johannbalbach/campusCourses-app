@@ -3,8 +3,7 @@ import { Container, Button, Table, Modal, Row, Col } from 'react-bootstrap';
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 import groupsApi from '../../api/groupsApi';
-import GroupModal from './groupModal';
-import store from '../../store/store';
+import GroupModal from '../shared/Modals/groupModal';
 
 const GroupsList = ({isAdmin}) => {
     const [groups, setGroups] = useState([]);

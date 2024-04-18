@@ -7,7 +7,8 @@ import CourseDetails from './courseDetails';
 import CourseCard from './courseCard';
 import CourseMembers from './courseMembers';
 import myCoursesApi from '../../api/myCoursesApi';
-import EditCourseModal from './Modals/EditCourseModal';
+import EditCourseModal from '../shared/Modals/EditCourseModal';
+import EditCourseAdminModal from '../shared/Modals/EditCourseAdminModal';
 
 
 const CourseInfo = ({userRole, isAdmin}) => {
@@ -37,7 +38,22 @@ const CourseInfo = ({userRole, isAdmin}) => {
 
     const [showEditCourseModal, setShowEditCourseModal] = useState(false);
     const handleModalClose = () => setShowEditCourseModal(false);
-    const handleModalOpen = () => setShowEditCourseModal(true);
+    const [showEditAdminCourseModal, setShowEditAdminCourseModal] = useState(false);
+    const handleAdminModalClose = () => setShowEditAdminCourseModal(false);
+
+    const handleModalOpen = () => {
+        if (isAdmin){
+            console.log("SMTH");
+            setShowEditAdminCourseModal(true);
+        }
+        if (isCourseTeacher && !isAdmin)
+        {
+            console.log("HUINZ");
+            setShowEditCourseModal(true);
+        }
+    }
+
+    
 
     // const [modalState, setModalState] = useState({
     //     showEditCourseModal: false,
@@ -76,11 +92,12 @@ const CourseInfo = ({userRole, isAdmin}) => {
 
                     <CourseDetails course={course} isPrivileged={isAdmin || isCourseTeacher} IsSubscribed={IsSubscribed}/>
                     <CourseCard body ={course} isPrivileged={isAdmin || isCourseTeacher}/>
-                    <CourseMembers members ={course} isPrivileged={isAdmin || isCourseTeacher} IsSubscribed={IsSubscribed}/>
+                    <CourseMembers members ={course} isPrivileged={isCourseTeacher} isAdmin={isAdmin} IsSubscribed={IsSubscribed}/>
                 </div>
 
 
-                {(isAdmin || isCourseTeacher) && <EditCourseModal data={course} showModal={showEditCourseModal} handleCloseModal={handleModalClose}/>}
+                {((isAdmin) && (<EditCourseAdminModal data={course} showModal={showEditAdminCourseModal} handleCloseModal={handleAdminModalClose}/>)) ||
+                ((isCourseTeacher && !isAdmin) && (<EditCourseModal data={course} showModal={showEditCourseModal} handleCloseModal={handleModalClose}/>))}
                 </>
             ):(
                 <a>Загрузка информации....</a>
@@ -91,7 +108,8 @@ const CourseInfo = ({userRole, isAdmin}) => {
   };
 
 const mapStateToProps = state => ({
-    userRole: state.userRole
+    userRole: state.userRole,
+    isAdmin: state.isAdmin
 });
 
 export default connect(mapStateToProps)(CourseInfo);

@@ -31,7 +31,7 @@ const NavBar = ({userRole}) => {
         store.dispatch(updateEmail(profile.email));
 
         const roles = await profileApi.getRole();
-
+        
         if (roles.isTeacher && roles.isStudent) {
             store.dispatch(updateUserRole('combo'));
         } else if (roles.isStudent) {

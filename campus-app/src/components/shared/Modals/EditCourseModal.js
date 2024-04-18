@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import {Button, Modal, Form } from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import ReactQuill from 'react-quill';
@@ -11,6 +11,7 @@ const EditCourseModal = ({data, showModal, handleCloseModal}) => {
         requirements: data.requirements,
         annotations: data.annotations
     });
+    const [localShowModal, setLocalShowModal] = useState(false); // Добавляем локальное состояние
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
@@ -20,6 +21,10 @@ const EditCourseModal = ({data, showModal, handleCloseModal}) => {
         ['image', 'video'],
         ['code']
       ];
+      
+    useEffect(() => {
+        setLocalShowModal(showModal); // Обновляем локальное состояние при изменении showModal
+    }, [showModal]);
 
     const handleSaveCourse = async (e) => {
         e.preventDefault();
@@ -29,10 +34,11 @@ const EditCourseModal = ({data, showModal, handleCloseModal}) => {
 
         await coursesApi.editCourseRequirementsAndAnnotations(id, formData);
         handleCloseModal(false);
+        setLocalShowModal(false); // Закрываем модальное окно после сохранения
     };
 
     return (
-        <Modal show={showModal} onHide={() => handleCloseModal(false)}>
+        <Modal show={localShowModal} onHide={() => handleCloseModal(false)}>
             <Modal.Header closeButton>
                 <Modal.Title>Редактирование курса</Modal.Title>
             </Modal.Header>

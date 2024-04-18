@@ -57,7 +57,7 @@ const ProfileForm = () => {
                 value={dob.value}
                 onChange={(e) => setDob({ value: e.target.value, isValid: e.target.value.match(e.target.pattern)})}
                 type="date"
-                max="2024-03-13"
+                max="2023-12-10"
                 isValid={dob.isValid}
                 pattern="^(19\d\d|20\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
                 feedbackText="Пожалуйста, введите корректную дату рождения."

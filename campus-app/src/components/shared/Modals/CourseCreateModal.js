@@ -3,8 +3,8 @@ import {Button, Modal, Form } from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import groupsApi from '../../api/groupsApi';
-import UserSelector from '../shared/userSelector';
+import groupsApi from '../../../api/groupsApi';
+import UserSelector from '../userSelector';
 
 const CourseCreateModal = ({showModal, handleCloseModal}) => {
     const {id} = useParams();

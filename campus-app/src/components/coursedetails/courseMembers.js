@@ -3,7 +3,7 @@ import { Card, Nav, Row, Col, Button, Modal } from 'react-bootstrap';
 import CourseMember from './courseMember';
 import AddTeacherModal from './Modals/AddTeacherModal';
 
-const CourseMembers = ({ members, isPrivileged, IsSubscribed}) => {
+const CourseMembers = ({ members, isPrivileged, isAdmin, IsSubscribed}) => {
     const { teachers, students } = members;
     const [activeTab, setActiveTab] = useState('teachers');
     const [selectedStudent, setSelectedStudent] = useState(null);
@@ -23,7 +23,7 @@ const CourseMembers = ({ members, isPrivileged, IsSubscribed}) => {
             case 'teachers':
                 return (
                     <>
-                        {(isPrivileged) && (
+                        {(isAdmin) && (
                             <Button style={{borderRadius: '0', fontSize: '0.8rem'}} variant="primary" className="mt-1 mb-1" onClick={handleModalOpen}>
                                 ДОБАВИТЬ ПРЕПОДАВАТЕЛЯ
                             </Button>
@@ -72,7 +72,7 @@ const CourseMembers = ({ members, isPrivileged, IsSubscribed}) => {
                 </Card.Body>
             </Card>
 
-            {isPrivileged && <AddTeacherModal showModal={showAddTeacherModal} handleCloseModal={handleModalClose}/>}
+            {isAdmin && <AddTeacherModal showModal={showAddTeacherModal} handleCloseModal={handleModalClose}/>}
         </>
 
     );
